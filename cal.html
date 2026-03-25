@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>April 2026 — Email Marketing Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #C2556A;
+    --pink-light: #F7E8EC;
+    --pink-mid: #E8A0AE;
+    --blue: #3A6EA8;
+    --blue-light: #E5EEF8;
+    --green: #3D7A5A;
+    --green-light: #E4F2EB;
+    --amber: #B5720A;
+    --amber-light: #FDF0DC;
+    --purple: #6052A8;
+    --purple-light: #EEECF9;
+    --coral: #B54A2E;
+    --coral-light: #F9EBE7;
+    --bg: #FBF8F5;
+    --surface: #FFFFFF;
+    --border: #E8E2DC;
+    --text: #1A1614;
+    --text-2: #6B5E58;
+    --text-3: #9E8E88;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+  }
+
+  .page-header {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .page-header-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .page-header-left h1 em {
+    font-style: italic;
+    color: var(--pink);
+  }
+
+  .page-header-left p {
+    font-size: 14px;
+    color: var(--text-2);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 13px;
+    color: var(--text-2);
+  }
+
+  .stat-pill strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .legend {
+    max-width: 1100px;
+    margin: 0 auto 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 5px 12px;
+  }
+
+  .leg-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+
+  .tab-row {
+    max-width: 1100px;
+    margin: 0 auto 20px;
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px;
+    width: fit-content;
+  }
+
+  .tab {
+    padding: 7px 20px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-2);
+    font-weight: 400;
+    transition: all 0.18s;
+  }
+
+  .tab.active {
+    background: var(--text);
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* CALENDAR */
+  .cal-wrap { display: block; }
+  .cal-days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+
+  .cal-day-name {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 0;
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+
+  .cal-cell {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    min-height: 100px;
+    padding: 10px 8px 8px;
+    transition: all 0.15s;
+  }
+
+  .cal-cell.empty {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .cal-cell.has-email {
+    cursor: pointer;
+  }
+
+  .cal-cell.has-email:hover {
+    border-color: var(--pink-mid);
+    box-shadow: 0 4px 16px rgba(194,85,106,0.1);
+    transform: translateY(-2px);
+  }
+
+  .cal-cell.today {
+    border-color: var(--pink);
+    background: #fff9fa;
+  }
+
+  .cal-num {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+
+  .cal-tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 6px;
+    border-radius: 5px;
+    margin-bottom: 3px;
+    display: block;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: opacity 0.12s;
+  }
+
+  .cal-tag:hover { opacity: 0.8; }
+
+  /* LIST VIEW */
+  .list-wrap { display: none; }
+
+  .list-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .list-item:hover {
+    border-color: var(--pink-mid);
+    box-shadow: 0 4px 16px rgba(194,85,106,0.08);
+  }
+
+  .li-date-box {
+    min-width: 56px;
+    text-align: center;
+  }
+
+  .li-date-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .li-date-day {
+    font-size: 10px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+
+  .li-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .li-tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 100px;
+    min-width: 82px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .li-content { flex: 1; }
+
+  .li-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .li-subj {
+    font-size: 12px;
+    color: var(--text-2);
+    font-style: italic;
+  }
+
+  .li-seg {
+    font-size: 11px;
+    color: var(--text-3);
+    min-width: 140px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* DETAIL MODAL */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,22,20,0.45);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-bg.open {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 32px;
+    position: relative;
+    animation: modalIn 0.2s ease;
+  }
+
+  @keyframes modalIn {
+    from { transform: translateY(12px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-2);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .modal-close:hover { background: var(--border); }
+
+  .modal-badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 14px;
+    letter-spacing: 0.03em;
+  }
+
+  .modal-date {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 20px;
+    line-height: 1.3;
+  }
+
+  .modal-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .modal-field {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+
+  .mf-label {
+    font-size: 10px;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 4px;
+  }
+
+  .mf-val {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  .modal-section-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 10px;
+  }
+
+  .modal-tip {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.6;
+    padding: 10px 12px;
+    background: var(--bg);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .tip-bullet {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--pink);
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+
+  /* TYPE COLORS */
+  .promo   { background: var(--pink-light);   color: var(--pink);   }
+  .nurture { background: var(--blue-light);   color: var(--blue);   }
+  .launch  { background: var(--green-light);  color: var(--green);  }
+  .flash   { background: var(--amber-light);  color: var(--amber);  }
+  .story   { background: var(--purple-light); color: var(--purple); }
+  .winback { background: var(--coral-light);  color: var(--coral);  }
+
+  @media (max-width: 700px) {
+    body { padding: 20px 12px 60px; }
+    .page-header-left h1 { font-size: 26px; }
+    .modal-fields { grid-template-columns: 1fr; }
+    .cal-cell { min-height: 72px; padding: 6px 4px; }
+    .cal-tag { font-size: 9px; padding: 2px 4px; }
+    .li-seg { display: none; }
+    .stats-row { gap: 6px; }
+  }
+
+  @media print {
+    body { background: #fff; padding: 20px; }
+    .tab-row, .modal-bg { display: none !important; }
+    .cal-cell.has-email:hover { transform: none; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="page-header-left">
+    <h1>April 2026 —<br><em>Email Marketing Calendar</em></h1>
+    <p>Women's Fashion Store · 18 Campaigns · Click any date to see the full brief</p>
+  </div>
+  <div class="stats-row">
+    <div class="stat-pill"><strong>18</strong> campaigns</div>
+    <div class="stat-pill"><strong>12</strong> send days</div>
+    <div class="stat-pill"><strong>6</strong> segments</div>
+    <div class="stat-pill"><strong>4</strong> types</div>
+  </div>
+</header>
+
+<div class="legend container">
+  <div class="leg"><div class="leg-dot" style="background:var(--pink)"></div>Promotional</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Nurture / Editorial</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Product Launch</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--amber)"></div>Flash Sale</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Brand Story</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--coral)"></div>Win-back</div>
+</div>
+
+<div class="tab-row container">
+  <button class="tab active" onclick="switchView('calendar',this)">Calendar</button>
+  <button class="tab" onclick="switchView('list',this)">List view</button>
+</div>
+
+<div class="container">
+
+  <!-- CALENDAR VIEW -->
+  <div class="cal-wrap" id="cal-wrap">
+    <div class="cal-days-header">
+      <div class="cal-day-name">Mon</div>
+      <div class="cal-day-name">Tue</div>
+      <div class="cal-day-name">Wed</div>
+      <div class="cal-day-name">Thu</div>
+      <div class="cal-day-name">Fri</div>
+      <div class="cal-day-name">Sat</div>
+      <div class="cal-day-name">Sun</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div class="list-wrap" id="list-wrap"></div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="handleModalBgClick(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div id="modal-badge" class="modal-badge"></div>
+    <div id="modal-date" class="modal-date"></div>
+    <div id="modal-title" class="modal-title"></div>
+    <div class="modal-fields" id="modal-fields"></div>
+    <div class="modal-section-title">Expert tips for this send</div>
+    <div id="modal-tips"></div>
+  </div>
+</div>
+
+<script>
+const dayNames = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const dateLabels = {
+  1:'Wed',2:'Thu',3:'Fri',4:'Sat',5:'Sun',6:'Mon',7:'Tue',
+  8:'Wed',9:'Thu',10:'Fri',11:'Sat',12:'Sun',13:'Mon',14:'Tue',
+  15:'Wed',16:'Thu',17:'Fri',18:'Sat',19:'Sun',20:'Mon',21:'Tue',
+  22:'Wed',23:'Thu',24:'Fri',25:'Sat',26:'Sun',27:'Mon',28:'Tue',
+  29:'Wed',30:'Thu'
+};
+
+const emails = [
+  { date:1, type:'story', label:'Brand Story', title:'April Awakening — Our Spring Philosophy', subj:'"She doesn\'t follow trends. She sets them."', seg:'All subscribers', time:'10:00', goal:'Brand engagement & loyalty', tips:['Open with a powerful visual of your hero product','Share your brand\'s "why" behind the spring collection','Include a soft CTA to browse — no discount needed','Emojis in subject line boost open rates 5–10% for fashion brands'] },
+  { date:2, type:'launch', label:'Product Launch', title:'Spring Collection Drop — New Arrivals Are Here', subj:'"Just dropped: The pieces she\'ll wear all season"', seg:'All subscribers', time:'09:00', goal:'New arrivals traffic & sales', tips:['Lead with your top 4–6 hero pieces in a clean grid','Use "Just dropped" or "Now live" language for urgency','Add a countdown if limited quantities','Mobile: ensure images are at least 600px wide'] },
+  { date:4, type:'nurture', label:'Nurture', title:'Style Guide: How to Dress for Spring 2026', subj:'"Your Spring 2026 style cheat sheet (save this)"', seg:'Engaged non-buyers', time:'10:30', goal:'Education & trust-building', tips:['Give genuine style value — 5 outfit combos with your products','Use real photos, not just product shots','Link each outfit to the exact product page','No discount — this is value, not a sale'] },
+  { date:5, type:'flash', label:'Flash Sale', title:'48-Hour Flash: 20% Off Spring Faves', subj:'"⏰ 48 hours only — 20% off spring faves"', seg:'Active buyers + wishlist', time:'08:00', goal:'Revenue spike', tips:['Send at 8am — flash sales perform best early','Use a countdown timer GIF in the header','Show urgency: "Only X left in stock" on hero items','Send a reminder 6 hours before expiry'] },
+  { date:5, type:'flash', label:'Flash Reminder', title:'Flash Sale: 6 Hours Left', subj:'"Last chance — 6 hours left on 20% off"', seg:'Non-openers from Apr 5 AM', time:'20:00', goal:'Conversion of fence-sitters', tips:['Subject line triggers FOMO urgency','Keep email very short — just the offer + CTA','Bold remaining time in the email body','Personalize with first name'] },
+  { date:7, type:'story', label:'Brand Story', title:'"Behind the seams" — How We Make Our Pieces', subj:'"We almost didn\'t show you this (behind the scenes)"', seg:'All subscribers', time:'11:00', goal:'Trust & brand differentiation', tips:['Show production, sourcing, or designer interviews','Video thumbnails increase click rate by 300%','Feature the people behind your brand','This is your "anti-ad" — be real and honest'] },
+  { date:9, type:'promo', label:'Promotional', title:'The Trench Coat Edit — Spring\'s Must-Have', subj:'"One coat, 7 outfits. The spring essential."', seg:'All subscribers', time:'09:30', goal:'Category feature + sales', tips:['Focus on a single product category per editorial','Show versatility: multiple outfit pairings','Include a "Complete the Look" section','Coordinate with your social calendar'] },
+  { date:11, type:'winback', label:'Win-back', title:'We miss you — Here\'s 15% to come back', subj:'"It\'s been a while. We saved something for you 💌"', seg:'Lapsed (90+ days no open)', time:'10:00', goal:'Reactivate dormant list', tips:['Send only to 90+ day lapsed segments','Offer is the hook — put it in the subject','Keep copy warm and personal, not pushy','If no open after 7 days, suppress from main list'] },
+  { date:12, type:'nurture', label:'Nurture', title:'How to Build a Capsule Wardrobe for Spring', subj:'"10 pieces. Endless outfits. Here\'s how."', seg:'New subscribers (< 30 days)', time:'10:00', goal:'Educate & warm up new subscribers', tips:['Best performed when subscribers are "warm" (< 30 days)','Feature 10 versatile items from your store','Use a numbered list format — easy to scan on mobile','End with: "Already have a fave? Let us know"'] },
+  { date:14, type:'promo', label:'Promotional', title:'Easter Weekend Sale — Up to 25% Off', subj:'"🌸 Easter treats: up to 25% off (4 days only)"', seg:'All subscribers', time:'08:00', goal:'Holiday revenue spike', tips:['Start Easter promo on Good Friday','Pastel palette in email design — aligns with holiday feel','Offer tiered: 15% on 1 item, 25% on 2+','Feature gifting angle — Easter gifts for her'] },
+  { date:15, type:'promo', label:'Easter Reminder', title:'Easter Sale Ends Tomorrow', subj:'"Last day — Easter sale ends tonight at midnight"', seg:'Non-buyers from Apr 14', time:'11:00', goal:'Last push conversion', tips:['Send to non-purchasers from the Apr 14 email','Add "bestsellers" section with social proof','Countdown timer is essential here','Include free shipping threshold if possible'] },
+  { date:17, type:'launch', label:'Product Launch', title:'Introducing: The Summer Preview Edit', subj:'"A sneak peek of what\'s coming this summer"', seg:'VIP buyers + top engagers', time:'10:00', goal:'VIP exclusivity + anticipation', tips:['Exclusive early access for VIPs only — say it clearly','"Only our best customers are seeing this"','Ask for wishlist submissions to boost engagement','Use "Coming Soon" overlays on upcoming pieces'] },
+  { date:19, type:'nurture', label:'Nurture', title:'Colour Trends You\'ll Actually Wear This Season', subj:'"The 5 colours dominating spring (and how to wear them)"', seg:'Engaged non-buyers', time:'10:30', goal:'Style authority + soft sell', tips:['Tie Pantone/runway trends to your actual inventory','Use Pinterest-style mood board layout','Each colour swatch links to matching products','This performs well as a re-engagement tool'] },
+  { date:21, type:'promo', label:'Promotional', title:'Earth Week Edit — Shop Consciously This Season', subj:'"Style that does more. Our conscious pieces."', seg:'All subscribers', time:'09:00', goal:'Values alignment + sales', tips:['Earth Day is April 22 — send one day early','Highlight sustainable materials, packaging, or ethics','Feature your eco-friendly lines specifically','Authenticity matters here — avoid greenwashing language'] },
+  { date:23, type:'flash', label:'Flash Sale', title:'Weekend Flash: Buy 2, Get 1 Free', subj:'"Buy 2 get 1 free — this weekend only ✨"', seg:'Active buyers', time:'09:00', goal:'AOV boost + weekend revenue', tips:['BOGO/B2G1 dramatically increases average order value','Clear the "buy 2 get 1 on lowest price" detail early','Show sets and bundles that work well together','Send Friday AM — weekend shopping mindset'] },
+  { date:25, type:'story', label:'Brand Story', title:'Customer Love: Real Women, Real Style', subj:'"She wore our linen dress to a wedding. Here\'s how."', seg:'All subscribers', time:'11:00', goal:'Social proof + UGC', tips:['Feature 3–5 real customer photos with permission','Use their words verbatim — authentic copy converts','Each customer story links to that product','Request UGC at email end: "Share your look with us"'] },
+  { date:27, type:'promo', label:'Promotional', title:'Payday Drop — New Arrivals + 10% Off', subj:'"Happy payday 💸 — treat yourself to something new"', seg:'All subscribers', time:'10:00', goal:'Payday revenue capture', tips:['UK/NL paydays typically fall on the 25–28th','Tie the email to payday in copy — "you\'ve earned it"','10% is enough nudge without killing margins','Feature fresh new arrivals released this week'] },
+  { date:29, type:'nurture', label:'Nurture', title:'May Preview — What\'s Coming Next Month', subj:'"A little preview of what we\'re dropping in May"', seg:'Engaged subscribers', time:'10:00', goal:'Retention & anticipation', tips:['Close the month with forward momentum','Tease 2–3 upcoming drops without revealing all','Ask subscribers to reply with what they want to see','Include a "Back in Stock" section if relevant'] },
+];
+
+const typeColors = {
+  promo:   { bg:'#F7E8EC', color:'#C2556A' },
+  nurture: { bg:'#E5EEF8', color:'#3A6EA8' },
+  launch:  { bg:'#E4F2EB', color:'#3D7A5A' },
+  flash:   { bg:'#FDF0DC', color:'#B5720A' },
+  story:   { bg:'#EEECF9', color:'#6052A8' },
+  winback: { bg:'#F9EBE7', color:'#B54A2E' },
+};
+
+const emailsByDate = {};
+emails.forEach(e => { if(!emailsByDate[e.date]) emailsByDate[e.date] = []; emailsByDate[e.date].push(e); });
+
+function buildCalendar() {
+  const grid = document.getElementById('cal-grid');
+  // April 2026 starts Wednesday = 2 empty slots (Mon=0, Tue=1)
+  for(let i=0;i<2;i++){
+    const empty = document.createElement('div');
+    empty.className = 'cal-cell empty';
+    grid.appendChild(empty);
+  }
+  for(let d=1;d<=30;d++){
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' + (emailsByDate[d] ? ' has-email' : '');
+    const num = document.createElement('div');
+    num.className = 'cal-num';
+    num.textContent = d;
+    cell.appendChild(num);
+    if(emailsByDate[d]){
+      emailsByDate[d].forEach(e => {
+        const tag = document.createElement('span');
+        tag.className = 'cal-tag';
+        tag.style.background = typeColors[e.type].bg;
+        tag.style.color = typeColors[e.type].color;
+        tag.textContent = e.label;
+        tag.onclick = () => openModal(e);
+        cell.appendChild(tag);
+      });
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function buildList() {
+  const wrap = document.getElementById('list-wrap');
+  emails.forEach(e => {
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    const c = typeColors[e.type];
+    item.innerHTML = `
+      <div class="li-date-box">
+        <div class="li-date-num">${e.date}</div>
+        <div class="li-date-day">${dateLabels[e.date]}</div>
+      </div>
+      <div class="li-divider"></div>
+      <span class="li-tag" style="background:${c.bg};color:${c.color}">${e.label}</span>
+      <div class="li-content">
+        <div class="li-title">${e.title}</div>
+        <div class="li-subj">${e.subj}</div>
+      </div>
+      <div class="li-seg">${e.seg}</div>
+    `;
+    item.onclick = () => openModal(e);
+    wrap.appendChild(item);
+  });
+}
+
+function openModal(e) {
+  const c = typeColors[e.type];
+  const badge = document.getElementById('modal-badge');
+  badge.textContent = e.label;
+  badge.style.background = c.bg;
+  badge.style.color = c.color;
+  document.getElementById('modal-date').textContent = `April ${e.date}, 2026 · ${dateLabels[e.date]} · ${e.time}`;
+  document.getElementById('modal-title').textContent = e.title;
+  document.getElementById('modal-fields').innerHTML = `
+    <div class="modal-field"><div class="mf-label">Subject line</div><div class="mf-val">${e.subj}</div></div>
+    <div class="modal-field"><div class="mf-label">Send time</div><div class="mf-val">${e.time}</div></div>
+    <div class="modal-field"><div class="mf-label">Segment</div><div class="mf-val">${e.seg}</div></div>
+    <div class="modal-field"><div class="mf-label">Primary goal</div><div class="mf-val">${e.goal}</div></div>
+  `;
+  document.getElementById('modal-tips').innerHTML = e.tips.map(t =>
+    `<div class="modal-tip"><div class="tip-bullet"></div><span>${t}</span></div>`
+  ).join('');
+  document.getElementById('modal-bg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleModalBgClick(ev) {
+  if(ev.target === document.getElementById('modal-bg')) closeModal();
+}
+
+function switchView(view, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cal-wrap').style.display = view === 'calendar' ? 'block' : 'none';
+  document.getElementById('list-wrap').style.display = view === 'list' ? 'block' : 'none';
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+buildCalendar();
+buildList();
+</script>
+</body>
+</html>
+
